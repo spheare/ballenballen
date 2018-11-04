@@ -1,3 +1,8 @@
-<p>
-  pattern works!
-</p>
+<div *ngFor="let row  of pattern">
+	<ng-container *ngFor="let stitch  of row">
+		<ng-container [ngSwitch]="stitch">
+			<span class="pattern__stitch" *ngSwitchCase="null">·</span>
+			<hana-stitch class="pattern__stitch" *ngSwitchDefault [stitch]="stitch"></hana-stitch>
+		</ng-container>
+	</ng-container>
+</div>
