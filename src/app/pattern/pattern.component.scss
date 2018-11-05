@@ -4,11 +4,19 @@
 }
 
 .pattern {
+	pointer-events: none;
+
+	&__stitch--null {
+		pointer-events: none;
+	}
 	&__stitch {
 		width: 20px;
 		height: 20px;
 		display: inline-block;;
 		margin: 2px;
 		padding: 0;
+		pointer-events: all;
 	}
+
+
 }

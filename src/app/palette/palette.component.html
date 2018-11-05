@@ -1,0 +1,7 @@
+
+<label class="palette__label" 	*ngFor="let s of palette">
+	<input type="radio" name="palette"
+	class="palette__button" [attr.selected]="currentStitchType === s"
+	 (click)="setStitch(s)"/>
+	 <span class="palette__swatch palette__swatch--{{swatchName(s)}}"></span>
+</label>

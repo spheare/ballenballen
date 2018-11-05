@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { StitchType } from '../data.service';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import { StitchType, DataService } from '../data.service';
 
 @Component({
 	selector: 'hana-stitch',
@@ -8,19 +8,38 @@ import { StitchType } from '../data.service';
 })
 export class StitchComponent implements OnInit {
 	@Input() stitch: StitchType;
+	@Input() currentStitchType: StitchType;
+
+	@Input() dragMode: boolean;
+	@Input() palette: StitchType[] = [];
+
+	@Output() stitchToggled: EventEmitter<StitchType> = new EventEmitter();
 
 	constructor() {}
 
 	ngOnInit() {}
 
-	@HostListener('click')
-	@HostListener('mouseover')
-	toggle() {
-		// ++this.stitch;
-		// if (this.stitch >= StitchType.LAST)
-		// this.stitch = StitchType.FIRST;
-		if (this.stitch === StitchType.X) this.stitch = StitchType.O;
-		else this.stitch = StitchType.X;
+	@HostListener('mouseover', [ '$event' ])
+	public onMouseOver(ev: MouseEvent) {
+		if (!this.dragMode) return;
+		if (!ev.buttons) return;
+		this.stitch = this.currentStitchType;
+
+	}
+
+	@HostListener('click',['$event'])
+	public toggle(ev:MouseEvent) {
+		// mode: toggle
+		let newStitch;
+		if (this.stitch === this.currentStitchType)
+			newStitch = StitchType.COLOR0;
+		else newStitch = this.currentStitchType;
+
+		this.stitchToggled.emit(newStitch);
+		// current mode: cycle
+		// const index = this.palette.indexOf(this.stitch);
+		// this.stitch = this.palette[(index + 1) % this.palette.length];
+
 	}
 
 	get stitchClass() {
@@ -28,10 +47,12 @@ export class StitchComponent implements OnInit {
 	}
 
 	get stitchRendering() {
-		switch( this.stitch )
-		{
-			case StitchType.X: return ' ';
-			case StitchType.O: return ' ';
-		}
+		return ' ';
+		// switch (this.stitch) {
+		// 	case StitchType.X:
+		// 		return ' ';
+		// 	case StitchType.O:
+		// 		return ' ';
+		// }
 	}
 }

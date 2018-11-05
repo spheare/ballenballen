@@ -1,2 +1,18 @@
-<hana-pattern [pattern]="patterns[0]"></hana-pattern>
-<hana-pattern [pattern]="patterns[1]"></hana-pattern>
+<hana-palette [currentStitchType] = "currentStitchType"
+(currentStitchTypeChange)="setStitch($event)"
+[palette]="currentPalette" class="palette"></hana-palette>
+
+<label>
+	Slepen om te tekenen <input type="checkbox" [checked]="dragMode" (input)="setDragMode( $event.currentTarget.checked )" />
+</label>
+
+<button type="button" (click)="window.print()">Print</button>
+<hr>
+
+<div class="pattern-container">
+	<hana-pattern *ngFor="let pattern of patterns" class="pattern-container__pattern" [pattern]="pattern"></hana-pattern>
+</div>
+<button type="button" (click)="addPattern()">Add Pattern</button>
+<button type="button" (click)="removePattern()">Remove Pattern</button>
+
+<div *ngFor="let pattern of patterns">{{pattern|json}}</div>

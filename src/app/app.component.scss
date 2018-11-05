@@ -1,0 +1,8 @@
+.pattern-container {
+	display: flex;
+	flex-direction: row;
+
+	&__pattern {
+		flex: 0 0 auto;
+	}
+}

@@ -5,12 +5,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PatternComponent } from './pattern/pattern.component';
 import { StitchComponent } from './stitch/stitch.component';
+import { PaletteComponent } from './palette/palette.component';
+import { RendererComponent } from './renderer/renderer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PatternComponent,
-    StitchComponent
+    StitchComponent,
+    PaletteComponent,
+    RendererComponent
   ],
   imports: [
     BrowserModule,

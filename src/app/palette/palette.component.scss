@@ -1,27 +1,18 @@
-:host {
-	width: 100%;
-	height: 100%;
-	display: block;
-
-	&--dragMode {
-		cursor: crosshair;
-	}
-
-	outline: 1px solid grey;
-
-	text-align: center;
-	font-size: 0.8rem;
-}
-
 
 @mixin fgbg( $bg,$fg ) {
 	background-color: $bg;
 	color: $fg;
 }
-.stitch {
-	width: 100%;
-	height: 100%;
-	display: block;
+.palette__label {
+	cursor: pointer;
+ }
+
+
+.palette__swatch {
+	width: 20px;
+	height: 20px;
+	display:inline-block;
+	outline:1px solid grey;
 
 	&--COLOR0,
 	&--FIRST { @include fgbg(white, white); }
@@ -35,4 +26,10 @@
 	&--LAST {
 		@include fgbg(black, white);
 	}
+}
+.palette__button {
+	display:none;
+}
+.palette__button:checked + .palette__swatch {
+	outline: 2px solid red;
 }
