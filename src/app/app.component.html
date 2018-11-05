@@ -14,5 +14,8 @@
 </div>
 <button type="button" (click)="addPattern()">Add Pattern</button>
 <button type="button" (click)="removePattern()">Remove Pattern</button>
+<hr>
 
-<div *ngFor="let pattern of patterns">{{pattern|json}}</div>
+<div class="pattern-renderer">
+	<hana-renderer [patterns]="patterns"></hana-renderer>
+</div>

@@ -16,6 +16,8 @@ export enum StitchType {
 }
 export type TPalette = StitchType[];
 
+export type TPattern = StitchType[][];
+
 const E = StitchType.EMPTY,
 	O = StitchType.COLOR0;
 

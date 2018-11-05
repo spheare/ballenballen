@@ -7,7 +7,7 @@ import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT } from './data.ser
 	styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit {
-	patterns = [  Object.assign([], PATTERN_BLUEPRINT) ];
+	patterns = [ this.newPattern() ];
 	currentPalette: TPalette;
 	dragMode: boolean;
 
@@ -18,6 +18,10 @@ export class AppComponent implements OnInit {
 		this.data.dragModeChanges.subscribe(mode => (this.dragMode = mode));
 	}
 
+	protected newPattern() {
+		return  JSON.parse(JSON.stringify(PATTERN_BLUEPRINT));
+
+	}
 	setDragMode(value) {
 		this.data.dragMode = value;
 	}
@@ -27,7 +31,7 @@ export class AppComponent implements OnInit {
 	}
 
 	addPattern() {
-		this.patterns.push( Object.assign([], PATTERN_BLUEPRINT) );
+		this.patterns.push( this.newPattern() );
 	}
 	removePattern() {
 		this.patterns.pop();
