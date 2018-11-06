@@ -10,12 +10,11 @@ export class PatternComponent implements OnInit {
 	@Input() pattern = [];
 
 	public palette: TPalette;
-	public dragMode: boolean;
+
 	public currentStitchType;
 
 	constructor(protected data: DataService) {
 		this.data.currentPaletteChanges.subscribe(val => (this.palette = val));
-		this.data.dragModeChanges.subscribe(val => (this.dragMode = val));
 		this.data.stitchTypeChanges.subscribe(val => (this.currentStitchType = val));
 	}
 	ngOnInit() {}

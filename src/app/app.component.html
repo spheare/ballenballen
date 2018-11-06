@@ -1,9 +1,7 @@
 <hana-palette [currentStitchType]="currentStitchType" (currentStitchTypeChange)="setStitch($event)" [palette]="currentPalette"
  class="palette"></hana-palette>
 
-<label>
-	Slepen om te tekenen <input type="checkbox" [checked]="dragMode" (input)="setDragMode( $event.currentTarget.checked )" />
-</label>
+
 
 <button type="button" (click)="window.print()">Print</button>
 <hr>
@@ -14,9 +12,7 @@
 <button type="button" (click)="addPattern()">Add Pattern</button>
 <button type="button" (click)="removePattern()">Remove Pattern</button>
 <hr>
-<div *ngIf="patterns[0]">
-	{{patterns[0][40] | json }}
-</div>
+
 <div class="pattern-renderer">
 	<hana-renderer [patterns]="patterns"></hana-renderer>
 </div>

@@ -10,7 +10,6 @@ export class StitchComponent implements OnInit {
 	@Input() stitch: StitchType;
 	@Input() currentStitchType: StitchType;
 
-	@Input() dragMode: boolean;
 	@Input() palette: StitchType[] = [];
 
 	@Output() stitchToggled: EventEmitter<StitchType> = new EventEmitter();
@@ -21,10 +20,8 @@ export class StitchComponent implements OnInit {
 
 	@HostListener('mouseover', [ '$event' ])
 	public onMouseOver(ev: MouseEvent) {
-		if (!this.dragMode) return;
 		if (!ev.buttons) return;
 		this.stitchToggled.emit(this.currentStitchType);
-
 	}
 
 	@HostListener('click',['$event'])

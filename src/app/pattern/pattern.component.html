@@ -1,13 +1,9 @@
 <div *ngFor="let row  of pattern, let rowIndex = index">
 	<ng-container *ngFor="let stitch  of row, let colIndex = index" [ngSwitch]="stitch">
 
-			<span class="pattern__stitch pattern__stitch--null" *ngSwitchCase="null">·</span>
-			<hana-stitch class="pattern__stitch" *ngSwitchDefault
-				[stitch]="stitch"
-				[palette]="palette"
-				[dragMode]="dragMode"
-				[currentStitchType]="currentStitchType"
-				(stitchToggled)="handleToggle(rowIndex,colIndex,$event)"></hana-stitch>
+		<span class="pattern__stitch pattern__stitch--null" *ngSwitchCase="null">·</span>
+		<hana-stitch class="pattern__stitch" *ngSwitchDefault [stitch]="stitch" [palette]="palette" [currentStitchType]="currentStitchType"
+		 (stitchToggled)="handleToggle(rowIndex,colIndex,$event)"></hana-stitch>
 
 	</ng-container>
 </div>

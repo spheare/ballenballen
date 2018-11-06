@@ -9,13 +9,12 @@ import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT, TPattern } from '
 export class AppComponent implements OnInit {
 	patterns = [ this.newPattern(true) ];
 	currentPalette: TPalette;
-	dragMode: boolean;
+
 
 	constructor(protected data: DataService) {}
 
 	ngOnInit() {
 		this.data.currentPaletteChanges.subscribe(palette => (this.currentPalette = palette));
-		this.data.dragModeChanges.subscribe(mode => (this.dragMode = mode));
 	}
 
 	protected newPattern(random: boolean = false) {
@@ -33,9 +32,7 @@ export class AppComponent implements OnInit {
 				)
 			: pattern;
 	}
-	setDragMode(value) {
-		this.data.dragMode = value;
-	}
+
 
 	setStitch(value) {
 		this.data.stitchType = value;
