@@ -83,19 +83,18 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	renderTexture(): HTMLCanvasElement {
 		// todo: move canvas to offscreen element
 		const canvas = document.createElement('canvas');
-		canvas.width = this.width;
-		canvas.height = this.height;
+		canvas.width =  canvas.height = 256;
 
 		const ctx = canvas.getContext('2d');
 
 		if (!this.patterns||!this.patterns.length) return;
 
 		const PATTERN_REPEAT = 4,
-			PATTERN_WIDTH = this.width / PATTERN_REPEAT,
+			PATTERN_WIDTH = canvas.width  / PATTERN_REPEAT,
 			BLOCK_WIDTH = PATTERN_WIDTH / 16, // 16 steken
-			BLOCK_HEIGHT = this.height / 41; // 41 rijen
+			BLOCK_HEIGHT = canvas.height / 41; // 41 rijen
 
-		ctx.clearRect(0, 0, this.width, this.height);
+		ctx.clearRect(0, 0, canvas.width , canvas.height);
 
 		for (let patIndex = 0; patIndex < PATTERN_REPEAT; ++patIndex)
 			this.patterns[patIndex % this.patterns.length].forEach((currRow, rowIndex) => {

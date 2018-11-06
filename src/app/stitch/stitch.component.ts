@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter, HostBinding } from '@angular/core';
 import { StitchType, DataService, COLOR_MAP } from '../data.service';
 
 @Component({
@@ -37,12 +37,13 @@ export class StitchComponent implements OnInit {
 		// this.stitch = this.palette[(index + 1) % this.palette.length];
 	}
 
+	@HostBinding('style.background-color')
 	public get backgroundColor() {
 		return COLOR_MAP[this.stitch];
 	}
 
 	get stitchRendering() {
-		return ' ';
+		return '·';
 		// switch (this.stitch) {
 		// 	case StitchType.X:
 		// 		return ' ';

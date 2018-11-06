@@ -7,23 +7,18 @@ import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT, TPattern } from '
 	styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit {
-
 	protected _patterns = [];
-
+	public drawMode = true;
 	protected currentPalette: TPalette;
 
 	constructor(protected data: DataService) {}
 
 	ngOnInit() {
 		this.data.currentPaletteChanges.subscribe(palette => (this.currentPalette = palette));
-		this.data.patternChanges.subscribe(
-				patterns => this._patterns = patterns
-		);
-
+		this.data.patternChanges.subscribe(patterns => (this._patterns = patterns));
 	}
-drawMode = true;
 
-	doPrint( ) {
+	doPrint() {
 		window.print();
 	}
 

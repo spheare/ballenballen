@@ -1,6 +1,15 @@
 :host {
-	border: 2px solid red;
+	border: 1px dotted grey;
 	display: inline-block;
+
+	* {
+		-webkit-touch-callout: none; /* iOS Safari */
+		-webkit-user-select: none; /* Safari */
+		 -khtml-user-select: none; /* Konqueror HTML */
+		   -moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* Internet Explorer/Edge */
+				user-select: none;
+	}
 }
 
 .pattern {
@@ -8,15 +17,19 @@
 
 	&__stitch--null {
 		pointer-events: none;
+		outline: 1px solid transparent;
+	}
+	&__stitch--item {
+		outline: 1px solid grey;
 	}
 	&__stitch {
+		text-align: center;
+		font-size: 0.8rem;
 		width: 20px;
 		height: 20px;
-		display: inline-block;;
+		display: inline-block;
 		margin: 2px;
 		padding: 0;
 		pointer-events: all;
 	}
-
-
 }
