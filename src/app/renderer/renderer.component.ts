@@ -13,6 +13,7 @@ import { TPattern, StitchType } from '../data.service';
 import * as THREE from 'three';
 
 const COLOR_MAP = {
+	[StitchType.EMPTY]: '#FFFFFF',
 	[StitchType.COLOR0]: '#123459',
 	[StitchType.COLOR1]: '#ff0000',
 	[StitchType.COLOR2]: '#0000ff',
@@ -79,41 +80,44 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 		ctx.clearRect(0, 0, this.width, this.height);
 
+		console.groupCollapsed(`render`);
 		for (let patIndex = 0; patIndex < PATTERN_REPEAT; ++patIndex) {
 			const pattern = this.patterns[patIndex % this.patterns.length];
 
 			for (let rows = 0; rows < pattern.length; ++rows) {
 				// aantal niet null punten in de rij
-				const pointCount = pattern[rows].reduce((col, prev) => prev + (col !== StitchType.EMPTY ? 1 : 0), 0);
+				const pointCount = pattern[rows].reduce(( prev, col) => prev + (col !== StitchType.EMPTY ? 1 : 0), 0);
 
 				// eerste niet null element
-				const firstNonZero = pattern[rows].findIndex(col=> col !== StitchType.EMPTY);
+				const firstNonZero = pattern[rows].findIndex(col => col !== StitchType.EMPTY);
 
 				// de volledige breedte incl whitespace
 				const rowWidth = pattern[rows].length;
 
-				const fSampleIncrement = pointCount / rowWidth;
-
-
-				for( let texX = 0; texX < rowWidth; ++texX )
-				{
+				console.groupCollapsed(`row ${rows}`);
+				console.log(
+					'row first non zero',
+					firstNonZero,
+					'number of non null points',
+					pointCount,
+					'total length',
+					rowWidth
+				);
+				for (let texX = 0; texX < rowWidth; ++texX) {
 					const fPercentage = texX / rowWidth;
-					const sampleX = Math.floor(firstNonZero + pointCount * fPercentage );
+					const sampleX = Math.floor(firstNonZero + pointCount * fPercentage);
+					const drawOffset = patIndex * PATTERN_WIDTH;
 
-					const drawOffset = texX * PATTERN_WIDTH;
+					console.log(`sample on pattern: ${sampleX}, render on txture pos ${texX}`);
 
-					// if (pattern[rows][cols] === StitchType.EMPTY) continue;
+					// if (pattern[rows][sampleX] === StitchType.EMPTY) continue;
 					ctx.fillStyle = COLOR_MAP[pattern[rows][sampleX]];
 					ctx.fillRect(drawOffset + texX * BLOCK_WIDTH, rows * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
 				}
-
-
-				// for (let cols = 0; cols < pattern[rows].length; ++cols) {
-				// 	const offset = patIndex * PATTERN_WIDTH;
-				// }
+				console.groupEnd();
 			}
 		}
-
+		console.groupEnd();
 		return canvas;
 	}
 
