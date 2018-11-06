@@ -12,7 +12,7 @@ export enum StitchType {
 	COLOR6,
 	COLOR7,
 	FIRST = StitchType.COLOR0,
-	LAST = StitchType.COLOR1
+	LAST = StitchType.COLOR7
 }
 
 export const COLOR_MAP = {
@@ -22,7 +22,7 @@ export const COLOR_MAP = {
 	[StitchType.COLOR2]: '#0000ff',
 	[StitchType.COLOR3]: '#00ff00',
 	[StitchType.COLOR4]: '#ffff00',
-	[StitchType.COLOR5]: '#808000',
+	[StitchType.COLOR5]: '#800080',
 	[StitchType.COLOR6]: '#cccccc',
 	[StitchType.COLOR7]: '#000000'
 };
@@ -89,7 +89,11 @@ export class DataService {
 		StitchType.COLOR0,
 		StitchType.COLOR1,
 		StitchType.COLOR2,
-		StitchType.COLOR3
+		StitchType.COLOR3,
+		StitchType.COLOR4,
+		StitchType.COLOR5,
+		StitchType.COLOR6,
+		StitchType.COLOR7
 	];
 	protected _currentPalette$ = new BehaviorSubject<TPalette>(this._currentPalette);
 

@@ -10,8 +10,8 @@ import {
 	OnDestroy
 } from '@angular/core';
 import { TPattern, StitchType, COLOR_MAP } from '../data.service';
-import * as THREE from 'three';
 
+import { EquirectangularReflectionMapping, ImageUtils, Scene, PerspectiveCamera, WebGLRenderer, SphereGeometry, PointLight, Color, Mesh, MeshPhongMaterial, CanvasTexture } from 'three';
 
 @Component({
 	selector: 'hana-renderer',
@@ -24,7 +24,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	@Input() height = 256;
 
 	@ViewChild('canvas') public canvas: ElementRef<HTMLCanvasElement>;
-	@ViewChild('webgl') public webgl: ElementRef<HTMLElement>;
+	@ViewChild('webgl') public webgl: ElementRef<HTMLCanvasElement>;
 
 	protected hAnimationFrame: number = null;
 
@@ -32,6 +32,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	protected camera: THREE.Camera;
 	protected renderer: THREE.Renderer;
 	protected mesh: THREE.Mesh;
+	protected bumpMap: THREE.Texture;
 
 	constructor() {}
 
@@ -42,7 +43,11 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 	ngAfterViewInit(): void {
 		this.renderTexture();
-		this.makeScene();
+
+		this.bumpMap = ImageUtils.loadTexture('/assets/knitted.jpg', null, tex => {
+			// tex.repeat.set(2,2);
+			this.makeScene();
+		});
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -60,8 +65,6 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 		if (!this.patterns) return;
 
-		console.log('renderTexture');
-
 		const PATTERN_REPEAT = 2,
 			PATTERN_WIDTH = this.width / PATTERN_REPEAT,
 			BLOCK_WIDTH = PATTERN_WIDTH / 16,
@@ -69,70 +72,52 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 		ctx.clearRect(0, 0, this.width, this.height);
 
-		console.groupCollapsed(`render`);
-		for (let patIndex = 0; patIndex < PATTERN_REPEAT; ++patIndex) {
-			const pattern = this.patterns[patIndex % this.patterns.length];
-
-			for (let rows = 0; rows < pattern.length; ++rows) {
+		for (let patIndex = 0; patIndex < PATTERN_REPEAT; ++patIndex)
+			this.patterns[patIndex % this.patterns.length].forEach((currRow, rowIndex) => {
 				// aantal niet null punten in de rij
-				const pointCount = pattern[rows].reduce(( prev, col) => prev + (col !== StitchType.EMPTY ? 1 : 0), 0);
+				const pointCount = currRow.reduce((prev, col) => prev + (col !== StitchType.EMPTY ? 1 : 0), 0);
 
 				// eerste niet null element
-				const firstNonZero = pattern[rows].findIndex(col => col !== StitchType.EMPTY);
+				const firstNonZero = currRow.findIndex(col => col !== StitchType.EMPTY);
 
 				// de volledige breedte incl whitespace
-				const rowWidth = pattern[rows].length;
+				const rowWidth = currRow.length;
 
-				console.groupCollapsed(`row ${rows}`);
-				console.log(
-					'row first non zero',
-					firstNonZero,
-					'number of non null points',
-					pointCount,
-					'total length',
-					rowWidth
-				);
-				for (let texX = 0; texX < rowWidth; ++texX) {
+				currRow.forEach((col, texX) => {
 					const fPercentage = texX / rowWidth;
 					const sampleX = Math.floor(firstNonZero + pointCount * fPercentage);
 					const drawOffset = patIndex * PATTERN_WIDTH;
 
-					console.log(`sample on pattern: ${sampleX}, render on txture pos ${texX}`);
+					if (currRow[sampleX] === StitchType.EMPTY) return;
+					ctx.fillStyle = COLOR_MAP[currRow[sampleX]];
+					ctx.fillRect(drawOffset + texX * BLOCK_WIDTH, rowIndex * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+				});
+			});
 
-					// if (pattern[rows][sampleX] === StitchType.EMPTY) continue;
-					ctx.fillStyle = COLOR_MAP[pattern[rows][sampleX]];
-					ctx.fillRect(drawOffset + texX * BLOCK_WIDTH, rows * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
-				}
-				console.groupEnd();
-			}
-		}
-		console.groupEnd();
 		return canvas;
 	}
 
 	makeScene() {
-		this.scene = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera(50, 500 / 400, 0.1, 1000);
+		this.scene = new Scene();
+		this.camera = new PerspectiveCamera(50, 500 / 400, 0.1, 1000);
 
-		this.renderer = new THREE.WebGLRenderer();
-		this.renderer.setSize(this.width, this.height);
+		this.renderer = new WebGLRenderer({
+			canvas: this.webgl.nativeElement
+		});
+		this.renderer.setSize(512, 512);
 
-		const geometry = new THREE.SphereGeometry(3, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
+		const geometry = new SphereGeometry(3, 32, 32);
 
-		this.webgl.nativeElement.appendChild(this.renderer.domElement);
-		// modify UVs to accommodate MatCap texture
-		// const faceVertexUvs = geometry.faceVertexUvs[0];
-		// for (const i = 0; i < faceVertexUvs.length; i++) {
-		// 	const uvs = faceVertexUvs[i];
-		// 	const face = geometry.faces[i];
 
-		// 	for (const j = 0; j < 3; j++) {
-		// 		uvs[j].x = face.vertexNormals[j].x * 0.5 + 0.5;
-		// 		uvs[j].y = face.vertexNormals[j].y * 0.5 + 0.5;
-		// 	}
-		// }
+		const light = new PointLight(new Color('rgb(230,230,230)'), 2.5);
+		const light2 = new PointLight(new Color('rgb(255,255,255)'), 4);
+		light.position.set(0, -100, 1000);
+		light2.position.set(50, 50, 1000);
 
-		this.mesh = new THREE.Mesh(geometry);
+		// this.scene.add(light);
+		this.scene.add(light2);
+
+		this.mesh = new Mesh(geometry);
 		this.updateMaterial();
 
 		this.scene.add(this.mesh);
@@ -144,14 +129,26 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 	updateMaterial(): void {
 		if (!this.mesh) return;
-		console.log('updating texure');
+
 		const canvas = this.renderTexture();
-		const material = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(canvas) });
+
+		const material = new MeshPhongMaterial({
+			// color: new THREE.Color('rgb(155,196,30)'),
+			// emissive: new THREE.Color('rgb(7,3,5)'),
+			// specular: new THREE.Color('rgb(255,113,0)'),
+
+			shininess: 20,
+			bumpMap: this.bumpMap,
+			map: new CanvasTexture(canvas, EquirectangularReflectionMapping),
+			bumpScale: 0.2
+		});
+		// material.map.repeat.setY(2)
 		this.mesh.material = material;
 	}
 
 	updateGLView() {
 		this.mesh.rotation.y += 0.01;
+		this.mesh.rotation.x -= 0.002;
 		this.renderer.render(this.scene, this.camera);
 
 		this.hAnimationFrame = requestAnimationFrame(this.updateGLView.bind(this));

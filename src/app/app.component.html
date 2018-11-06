@@ -1,6 +1,5 @@
-<hana-palette [currentStitchType] = "currentStitchType"
-(currentStitchTypeChange)="setStitch($event)"
-[palette]="currentPalette" class="palette"></hana-palette>
+<hana-palette [currentStitchType]="currentStitchType" (currentStitchTypeChange)="setStitch($event)" [palette]="currentPalette"
+ class="palette"></hana-palette>
 
 <label>
 	Slepen om te tekenen <input type="checkbox" [checked]="dragMode" (input)="setDragMode( $event.currentTarget.checked )" />
