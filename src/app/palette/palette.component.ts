@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { TPalette, StitchType, COLOR_MAP } from '../data.service';
+import { TPalette, StitchType, COLOR_MAP, DataService } from '../data.service';
 
 @Component({
 	selector: 'hana-palette',
@@ -7,11 +7,13 @@ import { TPalette, StitchType, COLOR_MAP } from '../data.service';
 	styleUrls: [ './palette.component.scss' ]
 })
 export class PaletteComponent implements OnInit {
-	@Input() palette: TPalette = [];
-	@Input() currentStitchType: StitchType;
-	@Output() currentStitchTypeChange: EventEmitter<StitchType> = new EventEmitter<StitchType>();
+	palette: TPalette = [];
+	currentStitchType: StitchType;
 
-	constructor() {}
+	constructor(protected data: DataService) {
+		this.data.currentPaletteChanges.subscribe(palette => (this.palette = palette));
+		this.data.stitchTypeChanges.subscribe(s => (this.currentStitchType = s));
+	}
 
 	ngOnInit() {}
 
@@ -19,6 +21,6 @@ export class PaletteComponent implements OnInit {
 		return COLOR_MAP[s];
 	}
 	setStitch(value: StitchType) {
-		this.currentStitchTypeChange.emit((this.currentStitchType = value));
+		this.data.stitchType = value;
 	}
 }

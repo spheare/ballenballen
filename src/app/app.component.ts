@@ -8,13 +8,12 @@ import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT, TPattern } from '
 })
 export class AppComponent implements OnInit {
 	protected _patterns = [];
+
 	public drawMode = true;
-	protected currentPalette: TPalette;
 
 	constructor(protected data: DataService) {}
 
 	ngOnInit() {
-		this.data.currentPaletteChanges.subscribe(palette => (this.currentPalette = palette));
 		this.data.patternChanges.subscribe(patterns => (this._patterns = patterns));
 	}
 
@@ -22,11 +21,12 @@ export class AppComponent implements OnInit {
 		window.print();
 	}
 
-	setStitch(value) {
-		this.data.stitchType = value;
-	}
-
 	addPattern() {
+		if(this._patterns.length >= 4)
+		{
+			alert('nie overdrijve');
+			return;
+		}
 		this.data.addNewPattern({});
 	}
 	removePattern() {

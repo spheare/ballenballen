@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 export enum StitchType {
 	EMPTY = null,
@@ -154,6 +155,19 @@ export class DataService {
 		this._patterns$.next(this._patterns);
 	}
 	constructor() {
-		this.addNewPattern({fill:false});
+
+
+		this._patterns$.pipe(debounceTime(1000)).subscribe(data => {
+			window.localStorage.setItem('data', JSON.stringify(data));
+		});
+
+		try {
+			const saved = JSON.parse(window.localStorage.getItem('data') );
+			this._patterns = saved;
+			this._patterns$.next(this._patterns);
+
+		} catch (ex) {
+			this.addNewPattern({ fill: false });
+		}
 	}
 }
