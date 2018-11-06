@@ -27,6 +27,7 @@ import {
 	RepeatWrapping,
 	MeshBasicMaterial
 } from 'three';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'hana-renderer',
@@ -39,7 +40,6 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 	public rotationX = 0;
 
-	// @ViewChild('canvas')	public canvas: ElementRef<HTMLCanvasElement>;
 	@ViewChild('webgl') public webgl: ElementRef<HTMLCanvasElement>;
 
 	protected hAnimationFrame: number = null;
@@ -51,16 +51,19 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	protected bumpMap: THREE.Texture;
 	protected patterns: TPattern[] = [];
 
+	protected sub: Subscription[] = [];
+
 	constructor(protected data: DataService) {}
 
 	ngOnInit() {
-		this.data.patternChanges.subscribe(patterns => {
+		this.sub.push (this.data.patternChanges.subscribe(patterns => {
 			this.patterns = patterns;
 			this.updateMaterial();
-		});
+		}));
 	}
 	ngOnDestroy() {
 		if (this.hAnimationFrame !== null) cancelAnimationFrame(this.hAnimationFrame);
+		this.sub.forEach( s => s.unsubscribe() );
 	}
 
 	ngAfterViewInit(): void {
