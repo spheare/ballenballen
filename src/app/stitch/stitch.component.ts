@@ -43,12 +43,18 @@ export class StitchComponent implements OnInit {
 	}
 
 	get stitchRendering() {
-		return '·';
-		// switch (this.stitch) {
-		// 	case StitchType.X:
-		// 		return ' ';
-		// 	case StitchType.O:
-		// 		return ' ';
-		// }
+		// return '·';
+		const SYMBOL_MAP = {
+			[StitchType.COLOR0]:'x',
+			[StitchType.COLOR1]:'*',
+			[StitchType.COLOR2]:'#',
+			[StitchType.COLOR3]:'—',
+			[StitchType.COLOR4]:'±',
+			[StitchType.COLOR5]:'†',
+			[StitchType.COLOR6]:'‡',
+			[StitchType.COLOR7]:'§'
+		};
+		return SYMBOL_MAP[ this.stitch ];
+
 	}
 }

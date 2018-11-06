@@ -86,7 +86,6 @@ export const PATTERN_BLUEPRINT = Object.freeze([
 	providedIn: 'root'
 })
 export class DataService {
-
 	protected _currentPalette: TPalette = [
 		StitchType.COLOR0,
 		StitchType.COLOR1,
@@ -130,11 +129,31 @@ export class DataService {
 		return this._patterns$.asObservable();
 	}
 
-	updatePattern ( patternIndex: number, rowIndex: number, colIndex: number, newStitch: StitchType ): any
-	{
+	updatePattern(patternIndex: number, rowIndex: number, colIndex: number, newStitch: StitchType): any {
 		this._patterns[patternIndex][rowIndex][colIndex] = newStitch;
 		this._patterns$.next(this._patterns);
 	}
 
-	constructor() {}
+	addNewPattern({ random = false, fill = true }): void {
+		const pattern = JSON.parse(JSON.stringify(PATTERN_BLUEPRINT)) as TPattern;
+		const fillColor = fill ? this._stitchType : StitchType.COLOR0;
+		const addPattern = pattern.map((row, index) =>
+			row.map(
+				col =>
+					col !== StitchType.EMPTY
+						? random
+							? Math.random() < 0.5
+								? Math.round(index / pattern.length * (StitchType.LAST - StitchType.FIRST + 1))
+								: fillColor
+							: fillColor
+						: StitchType.EMPTY
+			)
+		);
+
+		this._patterns.push(addPattern);
+		this._patterns$.next(this._patterns);
+	}
+	constructor() {
+		this.addNewPattern({fill:false});
+	}
 }

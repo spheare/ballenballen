@@ -1,3 +1,4 @@
+
 .renderer__texture {
 	width: 256;
 	height: 256;
@@ -5,6 +6,25 @@
 
 .renderer__webgl {
 	display:block;
-	width: 100%;
-	height: 100%;
+	width: 1024;
+	height: 1024;
 }
+
+.responsive-container {
+	overflow: hidden;
+	padding-top: 100%;
+	position: relative;
+  }
+
+  .responsive-container > * {
+	 border: 0;
+	 height: 100%;
+	 left: 0;
+	 position: absolute;
+	 top: 0;
+	 width: 100%;
+  }
+
+// .renderer__range {
+// 	width: 100%;
+// }

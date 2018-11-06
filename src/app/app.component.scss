@@ -6,3 +6,32 @@
 		flex: 0 0 auto;
 	}
 }
+
+.app {
+	&__content {
+	}
+
+	&__tools {
+		display: flex;
+		& > * {
+			flex: 0 0 auto;
+		}
+	}
+	&__button--spacer {
+		margin-left: 10px;
+	}
+	&__button {
+		display: block;
+		width: 20px;
+		height: 20px;
+		// border: 1px solid grey;
+		background: darkgray;
+		outline: 1px solid grey;
+	}
+}
+
+@media print {
+	.app--noprint {
+		display: none;
+	}
+}

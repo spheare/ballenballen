@@ -1,25 +1,26 @@
-<hana-palette [currentStitchType]="currentStitchType" (currentStitchTypeChange)="setStitch($event)" [palette]="currentPalette"
- class="palette"></hana-palette>
+<aside class=" app--noprint app__tools">
+	<hana-palette [currentStitchType]="currentStitchType" (currentStitchTypeChange)="setStitch($event)" [palette]="currentPalette"
+	 class="palette"></hana-palette>
 
-<button type="button" (click)="doPrint()">Print</button>
+	<button type="button" class="app__button--spacer app__button" (click)="addPattern()">➕</button>
+	<button type="button" class="app__button" (click)="removePattern()">➖</button>
+	<button type="button" class="app__button" (click)="drawMode = !drawMode">🤩</button>
+	<button type="button" class="app__button" (click)="doPrint()">🖨</button>
+</aside>
 
-<button type="button" (click)="drawMode = !drawMode">OMG!!</button>
-<hr>
+<section class="app__content">
+	<ng-container *ngIf="drawMode; else glView">
+		<div class="pattern-container">
+			<hana-pattern *ngFor="let pattern of _patterns, let patIndex = index" class="pattern-container__pattern"
+			 [patternIndex]="patIndex"></hana-pattern>
+		</div>
+	</ng-container>
 
-<ng-container *ngIf="drawMode; else glView">
-	<div class="pattern-container">
-		<hana-pattern *ngFor="let pattern of _patterns, let patIndex = index" class="pattern-container__pattern"
-		 [patternIndex]="patIndex"></hana-pattern>
-	</div>
-	<button type="button" (click)="addPattern()">Add Pattern</button>
-	<button type="button" (click)="removePattern()">Remove Pattern</button>
-	<hr>
-</ng-container>
+	<ng-template #glView>
 
-<ng-template #glView>
+		<div class="pattern-renderer">
+			<hana-renderer></hana-renderer>
+		</div>
 
-	<div class="pattern-renderer">
-		<hana-renderer></hana-renderer>
-	</div>
-
-</ng-template>
+	</ng-template>
+</section>

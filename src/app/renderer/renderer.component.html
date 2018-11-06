@@ -1,2 +1,5 @@
-<canvas  class="renderer__webgl" #webgl></canvas>
-<input type="range" min="-1.5707963268" max="1.5707963268" step="0.01" [value]="rotationX" (input)="rotationX = $event.currentTarget.value" >
+<div class="responsive-container">
+	<canvas class="renderer__webgl" #webgl width="1024" height="1024"></canvas>
+</div>
+<input class="renderer__range" type="range" min="-1.5707963268" max="1.5707963268" step="0.01" [value]="rotationX"
+ (input)="rotationX = $event.currentTarget.value">

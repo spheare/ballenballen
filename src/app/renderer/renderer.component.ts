@@ -35,8 +35,8 @@ import { Subscription } from 'rxjs';
 	styleUrls: [ './renderer.component.scss' ]
 })
 export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-	@Input() width = 256;
-	@Input() height = 256;
+	@Input() width = 1024;
+	@Input() height = 1024;
 
 	public rotationX = 0;
 
@@ -56,14 +56,16 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	constructor(protected data: DataService) {}
 
 	ngOnInit() {
-		this.sub.push (this.data.patternChanges.subscribe(patterns => {
-			this.patterns = patterns;
-			this.updateMaterial();
-		}));
+		this.sub.push(
+			this.data.patternChanges.subscribe(patterns => {
+				this.patterns = patterns;
+				this.updateMaterial();
+			})
+		);
 	}
 	ngOnDestroy() {
 		if (this.hAnimationFrame !== null) cancelAnimationFrame(this.hAnimationFrame);
-		this.sub.forEach( s => s.unsubscribe() );
+		this.sub.forEach(s => s.unsubscribe());
 	}
 
 	ngAfterViewInit(): void {
@@ -75,26 +77,26 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		this.webgl.nativeElement.width = this.width;
-		this.webgl.nativeElement.height = this.height;
+		// this.webgl.nativeElement.width = this.width;
+		// this.webgl.nativeElement.height = this.height;
 		this.updateMaterial();
 	}
 
 	renderTexture(): HTMLCanvasElement {
 		// todo: move canvas to offscreen element
 		const canvas = document.createElement('canvas');
-		canvas.width =  canvas.height = 256;
+		canvas.width = canvas.height = 1024;
 
 		const ctx = canvas.getContext('2d');
 
-		if (!this.patterns||!this.patterns.length) return;
+		if (!this.patterns || !this.patterns.length) return;
 
 		const PATTERN_REPEAT = 4,
-			PATTERN_WIDTH = canvas.width  / PATTERN_REPEAT,
+			PATTERN_WIDTH = canvas.width / PATTERN_REPEAT,
 			BLOCK_WIDTH = PATTERN_WIDTH / 16, // 16 steken
 			BLOCK_HEIGHT = canvas.height / 41; // 41 rijen
 
-		ctx.clearRect(0, 0, canvas.width , canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		for (let patIndex = 0; patIndex < PATTERN_REPEAT; ++patIndex)
 			this.patterns[patIndex % this.patterns.length].forEach((currRow, rowIndex) => {
@@ -129,7 +131,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 		this.scene = new Scene();
 		this.camera = new PerspectiveCamera(50, 500 / 400, 0.1, 1000);
 
-		this.renderer.setSize(this.width, this.height);
+		// this.renderer.setSize(this.width, this.height);
 
 		const geometry = new SphereGeometry(3, 32, 32);
 
@@ -152,22 +154,22 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 		if (!this.mesh) return;
 
 		const canvas = this.renderTexture();
-		const map = canvas?
-			 new CanvasTexture(canvas, EquirectangularReflectionMapping)
-			 : null;
+		const map = canvas ? new CanvasTexture(canvas, EquirectangularReflectionMapping) : null;
 
 		// this.bumpMap.wrapS = this.bumpMap.wrapT = RepeatWrapping;
 		// map.wrapS = map.wrapT = RepeatWrapping;
 
-		const material = canvas ? new MeshPhongMaterial({
-			// color: new THREE.Color('rgb(155,196,30)'),
-			// emissive: new Color('rgb(7,3,5)'),
-			// specular: new Color('rgb(255,113,0)'),
-			shininess: 0,
-			bumpMap: this.bumpMap,
-			map,
-			bumpScale: 0.05
-		}): new MeshBasicMaterial();
+		const material = canvas
+			? new MeshPhongMaterial({
+					// color: new THREE.Color('rgb(155,196,30)'),
+					// emissive: new Color('rgb(7,3,5)'),
+					// specular: new Color('rgb(255,113,0)'),
+					shininess: 0,
+					bumpMap: this.bumpMap,
+					map,
+					bumpScale: 0.05
+				})
+			: new MeshBasicMaterial();
 
 		// this.bumpMap.repeat.set(0.5, 0.5);
 		// map.repeat.set(0.5, 0.5);

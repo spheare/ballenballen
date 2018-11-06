@@ -1,7 +1,7 @@
 
 <label class="palette__label" 	*ngFor="let s of palette">
 	<input type="radio" name="palette"
-	class="palette__button" [attr.selected]="currentStitchType === s"
+	class="palette__button" [checked]="currentStitchType === s"
 	 (click)="setStitch(s)"/>
 	 <span [style.backgroundColor]="backgroundColor(s)" class="palette__swatch "></span>
 </label>

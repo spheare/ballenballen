@@ -15,5 +15,7 @@
 	display:none;
 }
 .palette__button:checked + .palette__swatch {
-	outline: 2px solid red;
+	// outline: 2px solid red;
+	box-shadow: 0px 0px 6px 3px  blue;
+	z-index: 5;
 }
