@@ -1,5 +1,2 @@
-<button (click)="updateMaterial()">Show me the money</button>
-<br>
-<canvas class="renderer__texture"  #canvas>
-</canvas>
 <canvas  class="renderer__webgl" #webgl></canvas>
+<input type="range" min="-1.5707963268" max="1.5707963268" step="0.01" [value]="rotationX" (input)="rotationX = $event.currentTarget.value" >

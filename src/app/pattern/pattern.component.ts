@@ -7,8 +7,9 @@ import { DataService, TPalette, StitchType } from '../data.service';
 	styleUrls: [ './pattern.component.scss' ]
 })
 export class PatternComponent implements OnInit {
-	@Input() pattern = [];
+	@Input() patternIndex = 0;
 
+	public pattern = [];
 	public palette: TPalette;
 
 	public currentStitchType;
@@ -16,11 +17,11 @@ export class PatternComponent implements OnInit {
 	constructor(protected data: DataService) {
 		this.data.currentPaletteChanges.subscribe(val => (this.palette = val));
 		this.data.stitchTypeChanges.subscribe(val => (this.currentStitchType = val));
+		this.data.patternChanges.subscribe(patterns => (this.pattern = patterns[this.patternIndex]));
 	}
 	ngOnInit() {}
 
 	handleToggle(rowIndex: number, colIndex: number, newStitch: StitchType) {
-		console.log(rowIndex, colIndex, newStitch);
-		this.pattern[rowIndex][colIndex] = newStitch;
+		this.data.updatePattern(this.patternIndex, rowIndex, colIndex, newStitch);
 	}
 }

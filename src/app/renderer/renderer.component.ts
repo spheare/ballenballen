@@ -9,9 +9,24 @@ import {
 	SimpleChanges,
 	OnDestroy
 } from '@angular/core';
-import { TPattern, StitchType, COLOR_MAP } from '../data.service';
+import { TPattern, StitchType, COLOR_MAP, DataService } from '../data.service';
 
-import { EquirectangularReflectionMapping, ImageUtils, Scene, PerspectiveCamera, WebGLRenderer, SphereGeometry, PointLight, Color, Mesh, MeshPhongMaterial, CanvasTexture } from 'three';
+import {
+	EquirectangularReflectionMapping,
+	ImageUtils,
+	Scene,
+	PerspectiveCamera,
+	WebGLRenderer,
+	SphereGeometry,
+	PointLight,
+	Color,
+	Mesh,
+	MeshPhongMaterial,
+	CanvasTexture,
+	Wrapping,
+	RepeatWrapping,
+	MeshBasicMaterial
+} from 'three';
 
 @Component({
 	selector: 'hana-renderer',
@@ -19,11 +34,12 @@ import { EquirectangularReflectionMapping, ImageUtils, Scene, PerspectiveCamera,
 	styleUrls: [ './renderer.component.scss' ]
 })
 export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-	@Input() patterns: TPattern[] = [];
 	@Input() width = 256;
 	@Input() height = 256;
 
-	@ViewChild('canvas') public canvas: ElementRef<HTMLCanvasElement>;
+	public rotationX = 0;
+
+	// @ViewChild('canvas')	public canvas: ElementRef<HTMLCanvasElement>;
 	@ViewChild('webgl') public webgl: ElementRef<HTMLCanvasElement>;
 
 	protected hAnimationFrame: number = null;
@@ -33,10 +49,16 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	protected renderer: THREE.Renderer;
 	protected mesh: THREE.Mesh;
 	protected bumpMap: THREE.Texture;
+	protected patterns: TPattern[] = [];
 
-	constructor() {}
+	constructor(protected data: DataService) {}
 
-	ngOnInit() {}
+	ngOnInit() {
+		this.data.patternChanges.subscribe(patterns => {
+			this.patterns = patterns;
+			this.updateMaterial();
+		});
+	}
 	ngOnDestroy() {
 		if (this.hAnimationFrame !== null) cancelAnimationFrame(this.hAnimationFrame);
 	}
@@ -45,30 +67,30 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 		this.renderTexture();
 
 		this.bumpMap = ImageUtils.loadTexture('/assets/knitted.jpg', null, tex => {
-			// tex.repeat.set(2,2);
 			this.makeScene();
 		});
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		this.canvas.nativeElement.width = this.width;
-		this.canvas.nativeElement.height = this.height;
-		this.renderTexture();
+		this.webgl.nativeElement.width = this.width;
+		this.webgl.nativeElement.height = this.height;
+		this.updateMaterial();
 	}
 
 	renderTexture(): HTMLCanvasElement {
 		// todo: move canvas to offscreen element
-		const canvas = this.canvas.nativeElement;
-		// const canvas = document.createElement('canvas');
+		const canvas = document.createElement('canvas');
+		canvas.width = this.width;
+		canvas.height = this.height;
 
 		const ctx = canvas.getContext('2d');
 
-		if (!this.patterns) return;
+		if (!this.patterns||!this.patterns.length) return;
 
-		const PATTERN_REPEAT = 2,
+		const PATTERN_REPEAT = 4,
 			PATTERN_WIDTH = this.width / PATTERN_REPEAT,
-			BLOCK_WIDTH = PATTERN_WIDTH / 16,
-			BLOCK_HEIGHT = this.height / 41;
+			BLOCK_WIDTH = PATTERN_WIDTH / 16, // 16 steken
+			BLOCK_HEIGHT = this.height / 41; // 41 rijen
 
 		ctx.clearRect(0, 0, this.width, this.height);
 
@@ -98,20 +120,19 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 	}
 
 	makeScene() {
-		this.scene = new Scene();
-		this.camera = new PerspectiveCamera(50, 500 / 400, 0.1, 1000);
-
 		this.renderer = new WebGLRenderer({
 			canvas: this.webgl.nativeElement
 		});
-		this.renderer.setSize(512, 512);
+
+		this.scene = new Scene();
+		this.camera = new PerspectiveCamera(50, 500 / 400, 0.1, 1000);
+
+		this.renderer.setSize(this.width, this.height);
 
 		const geometry = new SphereGeometry(3, 32, 32);
 
-
 		const light = new PointLight(new Color('rgb(230,230,230)'), 1);
 		light.position.set(-100, 150, 150);
-		// light2.position.set(50, 50, 1000);
 
 		this.scene.add(light);
 
@@ -129,23 +150,33 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 		if (!this.mesh) return;
 
 		const canvas = this.renderTexture();
+		const map = canvas?
+			 new CanvasTexture(canvas, EquirectangularReflectionMapping)
+			 : null;
 
-		const material = new MeshPhongMaterial({
+		// this.bumpMap.wrapS = this.bumpMap.wrapT = RepeatWrapping;
+		// map.wrapS = map.wrapT = RepeatWrapping;
+
+		const material = canvas ? new MeshPhongMaterial({
 			// color: new THREE.Color('rgb(155,196,30)'),
 			// emissive: new Color('rgb(7,3,5)'),
 			// specular: new Color('rgb(255,113,0)'),
-			shininess: 5,
+			shininess: 0,
 			bumpMap: this.bumpMap,
-			map: new CanvasTexture(canvas, EquirectangularReflectionMapping),
-			bumpScale: 0.1
-		});
+			map,
+			bumpScale: 0.05
+		}): new MeshBasicMaterial();
+
+		// this.bumpMap.repeat.set(0.5, 0.5);
+		// map.repeat.set(0.5, 0.5);
+
 		// material.map.repeat.setY(2)
 		this.mesh.material = material;
 	}
 
 	updateGLView() {
 		this.mesh.rotation.y += 0.0025;
-		// this.mesh.rotation.x -= 0.002;
+		this.mesh.rotation.x = this.rotationX;
 		this.renderer.render(this.scene, this.camera);
 
 		this.hAnimationFrame = requestAnimationFrame(this.updateGLView.bind(this));

@@ -7,13 +7,24 @@ import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT, TPattern } from '
 	styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit {
-	patterns = [ this.newPattern(false) ];
-	currentPalette: TPalette;
+
+	protected _patterns = [];
+
+	protected currentPalette: TPalette;
 
 	constructor(protected data: DataService) {}
 
 	ngOnInit() {
 		this.data.currentPaletteChanges.subscribe(palette => (this.currentPalette = palette));
+		this.data.patternChanges.subscribe(
+				patterns => this._patterns = patterns
+		);
+
+	}
+drawMode = true;
+
+	doPrint( ) {
+		window.print();
 	}
 
 	protected newPattern(random: boolean = false) {
@@ -37,9 +48,11 @@ export class AppComponent implements OnInit {
 	}
 
 	addPattern() {
-		this.patterns.push(this.newPattern());
+		this._patterns.push(this.newPattern());
+		this.data.patterns = this._patterns;
 	}
 	removePattern() {
-		this.patterns.pop();
+		this._patterns.pop();
+		this.data.patterns = this._patterns;
 	}
 }

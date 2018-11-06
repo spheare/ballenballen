@@ -34,7 +34,7 @@ export type TPattern = StitchType[][];
 const E = StitchType.EMPTY,
 	O = StitchType.COLOR0;
 
-	//40x16
+//40x16
 export const PATTERN_BLUEPRINT = Object.freeze([
 	[ E, E, E, E, E, E, O, O, O, E, E, E, E, E, E, E ],
 	[ E, E, E, E, E, E, O, O, O, E, E, E, E, E, E, E ],
@@ -86,6 +86,7 @@ export const PATTERN_BLUEPRINT = Object.freeze([
 	providedIn: 'root'
 })
 export class DataService {
+
 	protected _currentPalette: TPalette = [
 		StitchType.COLOR0,
 		StitchType.COLOR1,
@@ -101,6 +102,9 @@ export class DataService {
 	protected _stitchType: StitchType = StitchType.COLOR1;
 	protected _stitchType$ = new BehaviorSubject<StitchType>(this._stitchType);
 
+	protected _patterns: TPattern[] = [];
+	protected _patterns$ = new BehaviorSubject<TPattern[]>(this._patterns);
+
 	public set currentPalette(value: TPalette) {
 		this._currentPalette$.next((this._currentPalette = value));
 	}
@@ -109,12 +113,27 @@ export class DataService {
 		this._stitchType$.next((this._stitchType = value));
 	}
 
+	public set patterns(value: TPattern[]) {
+		this._patterns = JSON.parse(JSON.stringify(value)); // deep copy this
+		this._patterns$.next(this._patterns);
+	}
+
 	public get currentPaletteChanges() {
 		return this._currentPalette$.asObservable();
 	}
 
 	public get stitchTypeChanges() {
 		return this._stitchType$.asObservable();
+	}
+
+	public get patternChanges() {
+		return this._patterns$.asObservable();
+	}
+
+	updatePattern ( patternIndex: number, rowIndex: number, colIndex: number, newStitch: StitchType ): any
+	{
+		this._patterns[patternIndex][rowIndex][colIndex] = newStitch;
+		this._patterns$.next(this._patterns);
 	}
 
 	constructor() {}
