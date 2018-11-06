@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT } from './data.service';
+import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT, TPattern } from './data.service';
 
 @Component({
 	selector: 'hana-root',
@@ -7,7 +7,7 @@ import { StitchType, DataService, TPalette, PATTERN_BLUEPRINT } from './data.ser
 	styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit {
-	patterns = [ this.newPattern() ];
+	patterns = [ this.newPattern(false) ];
 	currentPalette: TPalette;
 	dragMode: boolean;
 
@@ -18,20 +18,29 @@ export class AppComponent implements OnInit {
 		this.data.dragModeChanges.subscribe(mode => (this.dragMode = mode));
 	}
 
-	protected newPattern() {
-		return  JSON.parse(JSON.stringify(PATTERN_BLUEPRINT));
-
+	protected newPattern(random: boolean = false) {
+		const pattern = JSON.parse(JSON.stringify(PATTERN_BLUEPRINT)) as TPattern;
+		return random
+			? pattern.map(row =>
+					row.map(
+						col =>
+							col !== StitchType.EMPTY
+								? Math.random() < 0.5 ? StitchType.COLOR2 : StitchType.COLOR1
+								: StitchType.EMPTY
+					)
+				)
+			: pattern;
 	}
 	setDragMode(value) {
 		this.data.dragMode = value;
 	}
 
-	setStitch( value ) {
+	setStitch(value) {
 		this.data.stitchType = value;
 	}
 
 	addPattern() {
-		this.patterns.push( this.newPattern() );
+		this.patterns.push(this.newPattern());
 	}
 	removePattern() {
 		this.patterns.pop();

@@ -80,7 +80,7 @@ export class DataService {
 	];
 	protected _currentPalette$ = new BehaviorSubject<TPalette>(this._currentPalette);
 
-	protected _dragMode: boolean;
+	protected _dragMode: boolean = true;
 	protected _dragMode$ = new BehaviorSubject<boolean>(this._dragMode);
 
 	protected _stitchType: StitchType = StitchType.COLOR1;

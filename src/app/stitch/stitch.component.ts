@@ -23,7 +23,7 @@ export class StitchComponent implements OnInit {
 	public onMouseOver(ev: MouseEvent) {
 		if (!this.dragMode) return;
 		if (!ev.buttons) return;
-		this.stitch = this.currentStitchType;
+		this.stitchToggled.emit(this.currentStitchType);
 
 	}
 
@@ -39,7 +39,6 @@ export class StitchComponent implements OnInit {
 		// current mode: cycle
 		// const index = this.palette.indexOf(this.stitch);
 		// this.stitch = this.palette[(index + 1) % this.palette.length];
-
 	}
 
 	get stitchClass() {

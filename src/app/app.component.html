@@ -15,7 +15,9 @@
 <button type="button" (click)="addPattern()">Add Pattern</button>
 <button type="button" (click)="removePattern()">Remove Pattern</button>
 <hr>
-
+<div *ngIf="patterns[0]">
+	{{patterns[0][40] | json }}
+</div>
 <div class="pattern-renderer">
 	<hana-renderer [patterns]="patterns"></hana-renderer>
 </div>
