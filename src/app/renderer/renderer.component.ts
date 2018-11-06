@@ -109,13 +109,11 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 		const geometry = new SphereGeometry(3, 32, 32);
 
 
-		const light = new PointLight(new Color('rgb(230,230,230)'), 2.5);
-		const light2 = new PointLight(new Color('rgb(255,255,255)'), 4);
-		light.position.set(0, -100, 1000);
-		light2.position.set(50, 50, 1000);
+		const light = new PointLight(new Color('rgb(230,230,230)'), 1);
+		light.position.set(-100, 150, 150);
+		// light2.position.set(50, 50, 1000);
 
-		// this.scene.add(light);
-		this.scene.add(light2);
+		this.scene.add(light);
 
 		this.mesh = new Mesh(geometry);
 		this.updateMaterial();
@@ -134,21 +132,20 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
 		const material = new MeshPhongMaterial({
 			// color: new THREE.Color('rgb(155,196,30)'),
-			// emissive: new THREE.Color('rgb(7,3,5)'),
-			// specular: new THREE.Color('rgb(255,113,0)'),
-
-			shininess: 20,
+			// emissive: new Color('rgb(7,3,5)'),
+			// specular: new Color('rgb(255,113,0)'),
+			shininess: 5,
 			bumpMap: this.bumpMap,
 			map: new CanvasTexture(canvas, EquirectangularReflectionMapping),
-			bumpScale: 0.2
+			bumpScale: 0.1
 		});
 		// material.map.repeat.setY(2)
 		this.mesh.material = material;
 	}
 
 	updateGLView() {
-		this.mesh.rotation.y += 0.01;
-		this.mesh.rotation.x -= 0.002;
+		this.mesh.rotation.y += 0.0025;
+		// this.mesh.rotation.x -= 0.002;
 		this.renderer.render(this.scene, this.camera);
 
 		this.hAnimationFrame = requestAnimationFrame(this.updateGLView.bind(this));

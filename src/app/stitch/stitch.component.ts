@@ -24,12 +24,11 @@ export class StitchComponent implements OnInit {
 		this.stitchToggled.emit(this.currentStitchType);
 	}
 
-	@HostListener('click',['$event'])
-	public toggle(ev:MouseEvent) {
+	@HostListener('click', [ '$event' ])
+	public toggle(ev: MouseEvent) {
 		// mode: toggle
 		let newStitch;
-		if (this.stitch === this.currentStitchType)
-			newStitch = StitchType.COLOR0;
+		if (this.stitch === this.currentStitchType) newStitch = StitchType.COLOR0;
 		else newStitch = this.currentStitchType;
 
 		this.stitchToggled.emit(newStitch);

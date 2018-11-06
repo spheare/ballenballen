@@ -20,7 +20,7 @@ export class PatternComponent implements OnInit {
 	ngOnInit() {}
 
 	handleToggle(rowIndex: number, colIndex: number, newStitch: StitchType) {
-		console.log( rowIndex,colIndex, newStitch);
+		console.log(rowIndex, colIndex, newStitch);
 		this.pattern[rowIndex][colIndex] = newStitch;
 	}
 }

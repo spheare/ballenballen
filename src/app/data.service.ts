@@ -17,7 +17,7 @@ export enum StitchType {
 
 export const COLOR_MAP = {
 	[StitchType.EMPTY]: '#FFFFFF',
-	[StitchType.COLOR0]: '#123459',
+	[StitchType.COLOR0]: '#FFFFFF',
 	[StitchType.COLOR1]: '#ff0000',
 	[StitchType.COLOR2]: '#0000ff',
 	[StitchType.COLOR3]: '#00ff00',
@@ -34,6 +34,7 @@ export type TPattern = StitchType[][];
 const E = StitchType.EMPTY,
 	O = StitchType.COLOR0;
 
+	//40x16
 export const PATTERN_BLUEPRINT = Object.freeze([
 	[ E, E, E, E, E, E, O, O, O, E, E, E, E, E, E, E ],
 	[ E, E, E, E, E, E, O, O, O, E, E, E, E, E, E, E ],
@@ -96,8 +97,6 @@ export class DataService {
 		StitchType.COLOR7
 	];
 	protected _currentPalette$ = new BehaviorSubject<TPalette>(this._currentPalette);
-
-
 
 	protected _stitchType: StitchType = StitchType.COLOR1;
 	protected _stitchType$ = new BehaviorSubject<StitchType>(this._stitchType);
