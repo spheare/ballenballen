@@ -9,20 +9,9 @@ import {
 	SimpleChanges,
 	OnDestroy
 } from '@angular/core';
-import { TPattern, StitchType } from '../data.service';
+import { TPattern, StitchType, COLOR_MAP } from '../data.service';
 import * as THREE from 'three';
 
-const COLOR_MAP = {
-	[StitchType.EMPTY]: '#FFFFFF',
-	[StitchType.COLOR0]: '#123459',
-	[StitchType.COLOR1]: '#ff0000',
-	[StitchType.COLOR2]: '#0000ff',
-	[StitchType.COLOR3]: '#00ff00',
-	[StitchType.COLOR4]: '#ffff00',
-	[StitchType.COLOR5]: '#808000',
-	[StitchType.COLOR6]: '#cccccc',
-	[StitchType.COLOR7]: '#000000'
-};
 
 @Component({
 	selector: 'hana-renderer',

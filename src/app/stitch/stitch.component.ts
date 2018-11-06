@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
-import { StitchType, DataService } from '../data.service';
+import { StitchType, DataService, COLOR_MAP } from '../data.service';
 
 @Component({
 	selector: 'hana-stitch',
@@ -41,8 +41,8 @@ export class StitchComponent implements OnInit {
 		// this.stitch = this.palette[(index + 1) % this.palette.length];
 	}
 
-	get stitchClass() {
-		return StitchType[this.stitch];
+	public get backgroundColor() {
+		return COLOR_MAP[this.stitch];
 	}
 
 	get stitchRendering() {

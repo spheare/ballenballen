@@ -3,5 +3,5 @@
 	<input type="radio" name="palette"
 	class="palette__button" [attr.selected]="currentStitchType === s"
 	 (click)="setStitch(s)"/>
-	 <span class="palette__swatch palette__swatch--{{swatchName(s)}}"></span>
+	 <span [style.backgroundColor]="backgroundColor(s)" class="palette__swatch "></span>
 </label>

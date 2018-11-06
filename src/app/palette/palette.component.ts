@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { TPalette, StitchType } from '../data.service';
+import { TPalette, StitchType, COLOR_MAP } from '../data.service';
 
 @Component({
 	selector: 'hana-palette',
@@ -15,8 +15,8 @@ export class PaletteComponent implements OnInit {
 
 	ngOnInit() {}
 
-	public swatchName(s: StitchType) {
-		return StitchType[s];
+	public backgroundColor(s: StitchType) {
+		return COLOR_MAP[s];
 	}
 	setStitch(value: StitchType) {
 		this.currentStitchTypeChange.emit((this.currentStitchType = value));

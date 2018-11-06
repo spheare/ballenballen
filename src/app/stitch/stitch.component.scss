@@ -13,26 +13,9 @@
 	font-size: 0.8rem;
 }
 
-
-@mixin fgbg( $bg,$fg ) {
-	background-color: $bg;
-	color: $fg;
-}
 .stitch {
 	width: 100%;
 	height: 100%;
 	display: block;
 
-	&--COLOR0,
-	&--FIRST { @include fgbg(white, white); }
-	&--COLOR1 { @include fgbg(red, white); }
-	&--COLOR2 { @include fgbg(blue, white); }
-	&--COLOR3 { @include fgbg(green, white); }
-	&--COLOR4 { @include fgbg(yellow, white); }
-	&--COLOR5 { @include fgbg(orange, white); }
-	&--COLOR6 { @include fgbg(silver, black); }
-	&--COLOR7,
-	&--LAST {
-		@include fgbg(black, white);
-	}
 }

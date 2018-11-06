@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export enum StitchType {
 	EMPTY = null,
-	COLOR0=1,
+	COLOR0 = 1,
 	COLOR1,
 	COLOR2,
 	COLOR3,
@@ -12,8 +12,21 @@ export enum StitchType {
 	COLOR6,
 	COLOR7,
 	FIRST = StitchType.COLOR0,
-	LAST = StitchType.COLOR1,
+	LAST = StitchType.COLOR1
 }
+
+export const COLOR_MAP = {
+	[StitchType.EMPTY]: '#FFFFFF',
+	[StitchType.COLOR0]: '#123459',
+	[StitchType.COLOR1]: '#ff0000',
+	[StitchType.COLOR2]: '#0000ff',
+	[StitchType.COLOR3]: '#00ff00',
+	[StitchType.COLOR4]: '#ffff00',
+	[StitchType.COLOR5]: '#808000',
+	[StitchType.COLOR6]: '#cccccc',
+	[StitchType.COLOR7]: '#000000'
+};
+
 export type TPalette = StitchType[];
 
 export type TPattern = StitchType[][];
@@ -76,7 +89,7 @@ export class DataService {
 		StitchType.COLOR0,
 		StitchType.COLOR1,
 		StitchType.COLOR2,
-		StitchType.COLOR3,
+		StitchType.COLOR3
 	];
 	protected _currentPalette$ = new BehaviorSubject<TPalette>(this._currentPalette);
 
