@@ -155,17 +155,16 @@ export class DataService {
 		this._patterns$.next(this._patterns);
 	}
 	constructor() {
-
-
 		this._patterns$.pipe(debounceTime(1000)).subscribe(data => {
 			window.localStorage.setItem('data', JSON.stringify(data));
 		});
 
 		try {
-			const saved = JSON.parse(window.localStorage.getItem('data') );
-			this._patterns = saved;
-			this._patterns$.next(this._patterns);
-
+			const saved = JSON.parse(window.localStorage.getItem('data'));
+			if (saved) {
+				this._patterns = saved;
+				this._patterns$.next(this._patterns);
+			} else this.addNewPattern({ fill: false });
 		} catch (ex) {
 			this.addNewPattern({ fill: false });
 		}
